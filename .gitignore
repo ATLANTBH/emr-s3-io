@@ -2,4 +2,3 @@
 *.project
 target
 .settings
-src/main/resources/AwsCredentials.properties
