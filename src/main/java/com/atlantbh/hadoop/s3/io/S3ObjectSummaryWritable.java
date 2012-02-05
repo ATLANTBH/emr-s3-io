@@ -61,6 +61,6 @@ public class S3ObjectSummaryWritable extends S3ObjectSummary implements
 	
 	@Override
 	public String toString() {
-		return String.format("[bucketName=%s, key=%s, size=%l, ETag=%s, storageClass=%s]", getBucketName(), getKey(), getSize(), getETag(), getStorageClass());
+		return String.format("[bucketName=%s, key=%s, size=%d, ETag=%s, storageClass=%s]", getBucketName(), getKey(), getSize(), getETag(), getStorageClass());
 	}
 }

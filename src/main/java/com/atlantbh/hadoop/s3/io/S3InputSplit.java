@@ -10,6 +10,12 @@ import org.apache.hadoop.mapreduce.InputSplit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Input split used for reading files from Amazon S3
+ * 
+ * @author seljaz
+ *
+ */
 public class S3InputSplit extends InputSplit implements Writable {
 	
 	static Logger LOG = LoggerFactory.getLogger(S3InputSplit.class);
@@ -63,13 +69,6 @@ public class S3InputSplit extends InputSplit implements Writable {
 	S3InputSplit() {
 	}
 
-	S3InputSplit(String bucketName, String keyPrefix, String marker, String lastKey) {
-		setBucketName(bucketName);
-		setKeyPrefix(keyPrefix);
-		setMarker(marker);
-		setLastKey(lastKey);
-	}
-
 	@Override
 	public long getLength() throws IOException, InterruptedException {
 		return 0;
@@ -98,6 +97,6 @@ public class S3InputSplit extends InputSplit implements Writable {
 	
 	@Override
 	public String toString() {
-		return String.format("[Bucket=%s, Prefix=%s, Marker=%s, LastKey=%s], ", getBucketName(), getKeyPrefix(), getMarker(), getLastKey());
+		return String.format("[Bucket=%s, Prefix=%s, Marker=%s, LastKey=%s, Size=%d], ", getBucketName(), getKeyPrefix(), getMarker(), getLastKey(), getSize());
 	}
 }
