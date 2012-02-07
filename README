@@ -1,0 +1,30 @@
+Overview
+========
+
+emr-s3-io is library providing custom Hadoop input splits for processing huge number of files stored on Amazon S3 in Hadoop MapReduce jobs.
+
+
+Problem
+=======
+
+Apache Hadoop platform including MapReduce framework are created to process smaller number of very huge files (size in GBs and TBs) rather than huge number of small size (size in KBs and MBs). Standard Hadoop file input format class is very inefficient when working with huge number of small files. We can use directory or some file name pattern to specify input to MapReduce job but it will result in huge number of mappers being submitted. If the work that mappers are going perform is not time consuming (calling other systems, heavy processing such as image and video processing, etc), each mapper will finish its work relatively fast. The amount of time required to setup and cleanup job mappers can easily become too big when compared to time needed for mappers to process the data. This ratio can be reduced by reusing JVMs between mappers running on same physical machine in Hadoop cluster, but it still can be significantly high.
+
+
+Solution
+========
+Hadoop uses input formats and input splits as a mechanism to determine the number of mappers that will be submitted for job. InputFormat’s method getSplits() is responsible for generating the list of input splits which are going to be used as input for each mapper. For example, by default FileInputFormat is going to create one input split for each HDFS block of the files specified as job input. Another example is TableInputFormat class when HBase is used as data source in map reduce job. By default, TableInputFormat is going to create one mapper per HBase region of underlying table.
+
+When working with files stored on Amazon S3 we have to consider following:
+  - The number of files stored in S3 bucket can be practically unlimited
+  -	The size of the files can be anything from few KBs to several GBs
+  -	Files can be accessed either by their full name or by name prefix
+  -	There is no concept of “blocks” similar to HDFS data blocks
+
+S3ObjectInputFormat and S3ObjectSummaryInputFormat are Hadoop input formats to access the files stored on Amazon S3 in map reduce jobs (Terminology such as: key, object, object summary is taken from Amazon S3 SDK). Abstract S3InputFormat class implements getSplit() method that splits the keys (files) in S3 bucket into key segments of equal size by defining start and end key for each segment. To determine the start and end keys for each input split, all keys must be read by S3 input format code and equal key segments are calculated using configurable “Number of keys per mapper” property. There is also an option to specify “Key prefix” property to work with subset of keys in the bucket.
+The library uses AWS SDK to access theS3 service and its use is not limited to jobs running on Amazon Elastic MapReduce service. When running on non-Amazon Hadoop clusters network latency must be accounted.
+
+
+Classes
+=======
+
+
