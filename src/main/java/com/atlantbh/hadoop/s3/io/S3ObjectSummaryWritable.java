@@ -7,37 +7,42 @@ import java.util.Date;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.WritableComparable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.amazonaws.services.s3.model.Owner;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 
+/**
+ * Implementation of {@link WritableComparable} interface for {@link S3ObjectSummary} class
+ * 
+ * @author seljaz
+ *
+ */
 public class S3ObjectSummaryWritable extends S3ObjectSummary implements
 		WritableComparable<S3ObjectSummary> {
+	
+	static Logger LOG = LoggerFactory.getLogger(S3InputSplit.class);
 	
 	public S3ObjectSummaryWritable(){
 		
 	}
 	
-	public S3ObjectSummaryWritable(String bucketName, String key, String ETag, String storageClass, long size, Date lastModifiedDate, Owner owner) {
-		setBucketName(bucketName);
-		setKey(key);
-		setETag(ETag);
-		setStorageClass(storageClass);
-		setSize(size);
-		setLastModified(lastModifiedDate);
-		setOwner(owner);
-	}
-
 	@Override
 	public void readFields(DataInput in) throws IOException {
 		this.setBucketName(Text.readString(in));
 		this.setKey(Text.readString(in));
 		this.setETag(Text.readString(in));
 		this.setStorageClass(Text.readString(in));
+		
+		// Set owner
+		Owner owner = new Owner();
+		owner.setId(Text.readString(in));
+		owner.setDisplayName(Text.readString(in));
+		
+		this.setOwner(owner);
 		this.setSize(in.readLong());
-		// LastModiifiedData and Owner are not serialized
-		this.setLastModified(null);
-		this.setOwner(null);
+		this.setLastModified(new Date(in.readLong()));
 	}
 
 	@Override
@@ -46,8 +51,10 @@ public class S3ObjectSummaryWritable extends S3ObjectSummary implements
 		Text.writeString(out, getKey());
 		Text.writeString(out, getETag());
 		Text.writeString(out, getStorageClass());
+		Text.writeString(out, getOwner().getId());
+		Text.writeString(out, getOwner().getDisplayName());
 		out.writeLong(getSize());
-		// LastModiifiedData and Owner are not serialized
+		out.writeLong(getLastModified().getTime());
 	}
 
 	@Override
@@ -61,6 +68,6 @@ public class S3ObjectSummaryWritable extends S3ObjectSummary implements
 	
 	@Override
 	public String toString() {
-		return String.format("[bucketName=%s, key=%s, size=%d, ETag=%s, storageClass=%s]", getBucketName(), getKey(), getSize(), getETag(), getStorageClass());
+		return String.format("[bucketName=%s, key=%s, size=%d, ETag=%s, storageClass=%s, owner=%s, lastModified=%s]", getBucketName(), getKey(), getSize(), getETag(), getStorageClass(), getOwner(), getLastModified());
 	}
 }

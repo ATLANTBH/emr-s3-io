@@ -6,12 +6,18 @@ import java.io.IOException;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
+import org.apache.hadoop.io.WritableUtils;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Input split used for reading files from Amazon S3
+ * S3 Input split class
+ * 
+ * This class defines a portion of keys in Amazon S3 bucket. Following attributes define input split: bucket name, prefix, 
+ * marker and last key. Combination of marker, prefix and last key is used to select only portion of keys in Amazon S3 
+ * bucket. As keys in bucket are sorted alphabetically defining marker (or start key) and last key (or end key) we can 
+ * define interval of keys as input split. Key used as a marker is not included while last key is.
  * 
  * @author seljaz
  *
@@ -71,7 +77,7 @@ public class S3InputSplit extends InputSplit implements Writable {
 
 	@Override
 	public long getLength() throws IOException, InterruptedException {
-		return 0;
+		return size;
 	}
 
 	@Override
@@ -85,6 +91,7 @@ public class S3InputSplit extends InputSplit implements Writable {
 		Text.writeString(out, getKeyPrefix());
 		Text.writeString(out, getMarker() != null ? getMarker() : "");
 		Text.writeString(out, getLastKey());
+		WritableUtils.writeVInt(out, getSize());
 	}
 
 	@Override
@@ -93,6 +100,7 @@ public class S3InputSplit extends InputSplit implements Writable {
 		setKeyPrefix(Text.readString(in));
 		setMarker(Text.readString(in));
 		setLastKey(Text.readString(in));
+		setSize(WritableUtils.readVInt(in));
 	}
 	
 	@Override

@@ -49,13 +49,10 @@ public abstract class S3InputFormat<K, V> extends InputFormat<K, V> {
 	public S3InputFormat() throws IOException {
 	}
 
-	/*
-	 * Returns list of DirectoryInputSplits containing all files specified using
-	 * "abh.directory.path" property (non-Javadoc)
+	/**
+	 * Returns list of {@link S3InputSplit} 
 	 * 
-	 * @see
-	 * org.apache.hadoop.mapreduce.InputFormat#getSplits(org.apache.hadoop.mapreduce
-	 * .JobContext)
+	 * @see org.apache.hadoop.mapreduce.InputFormat#getSplits(org.apache.hadoop.mapreduce.JobContext)
 	 */
 	@Override
 	public List<InputSplit> getSplits(JobContext context) throws IOException, InterruptedException {

@@ -7,6 +7,12 @@ import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 
+/**
+ * S3 object summary input format
+ * 
+ * @author seljaz
+ *
+ */
 public class S3ObjectSummaryInputFormat extends S3InputFormat<Text, S3ObjectSummaryWritable>  {
 
 	public S3ObjectSummaryInputFormat() throws IOException {
@@ -19,5 +25,4 @@ public class S3ObjectSummaryInputFormat extends S3InputFormat<Text, S3ObjectSumm
 			InterruptedException {
 		return new S3ObjectSummaryRecordReader();
 	}
-
 }
