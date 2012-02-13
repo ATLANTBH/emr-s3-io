@@ -14,10 +14,10 @@ import org.slf4j.LoggerFactory;
 /**
  * S3 Input split class
  * 
- * This class defines a portion of keys in Amazon S3 bucket. Following attributes define input split: bucket name, prefix, 
- * marker and last key. Combination of marker, prefix and last key is used to select only portion of keys in Amazon S3 
- * bucket. As keys in bucket are sorted alphabetically defining marker (or start key) and last key (or end key) we can 
- * define interval of keys as input split. Key used as a marker is not included while last key is.
+ * This class defines a subset of keys from Amazon S3 bucket. Following attributes define input split: bucket name, prefix, 
+ * marker and last key. Combination of marker, prefix and last key is used to select only subset of keys from Amazon S3 
+ * bucket. As keys in bucket are sorted alphabetically so defining marker (or start key) and last key (or end key) we can 
+ * define interval of keys as input split. Key used as a marker is non-inclusive while last key is.
  * 
  * @author seljaz
  *
@@ -105,6 +105,6 @@ public class S3InputSplit extends InputSplit implements Writable {
 	
 	@Override
 	public String toString() {
-		return String.format("[Bucket=%s, Prefix=%s, Marker=%s, LastKey=%s, Size=%d], ", getBucketName(), getKeyPrefix(), getMarker(), getLastKey(), getSize());
+		return String.format("[Bucket=%s, Prefix=%s, Marker=%s, LastKey=%s, Size=%d]", getBucketName(), getKeyPrefix(), getMarker(), getLastKey(), getSize());
 	}
 }

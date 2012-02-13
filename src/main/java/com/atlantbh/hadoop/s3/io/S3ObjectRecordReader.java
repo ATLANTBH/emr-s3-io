@@ -4,6 +4,13 @@ import java.io.IOException;
 
 import com.amazonaws.services.s3.model.S3Object;
 
+/**
+ * Record reader for reading ({@link S3ObjectSummaryWritable}, {@link S3ObjectWritable}) as (key, value) pairs
+ * from underlying S3 Input Split
+ * 
+ * @author seljaz
+ *
+ */
 public class S3ObjectRecordReader extends S3RecordReader<S3ObjectSummaryWritable, S3ObjectWritable> {
 	S3Object object;
 	

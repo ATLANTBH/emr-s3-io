@@ -7,7 +7,8 @@ import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 
 /**
- * S3 object input format
+ * S3 object input format. The purpose of this input format class is to read keys from Amazon S3 service 
+ * in form of (key, value) = ({@link S3ObjectSummaryWritable}, {@link S3ObjectWritable}) 
  * 
  * @author seljaz
  *

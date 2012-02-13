@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-import com.atlantbh.hadoop.s3.io.S3RecordReader.S3BucketReader;
 
 /**
  * Abstract S3 File Input format class

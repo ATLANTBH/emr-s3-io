@@ -84,4 +84,9 @@ public class S3ObjectWritable extends S3Object implements
 			return getBucketName().compareTo(o.getBucketName());
 		}
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("[bucketName=%s, key=%s]", getBucketName(), getKey());
+	}
 }
